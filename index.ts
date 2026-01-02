@@ -9,7 +9,7 @@ const startServer = async () => {
   const port = config.port || 5000;
   
   app.listen(port, () => {
-    console.log(`The server is running on the ${port} port.`)
+    console.log(`The server is running on the ${port} port. \n Server Environment ${config.env}`)
   })
 }
 

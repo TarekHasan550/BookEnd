@@ -1,11 +1,11 @@
-import {config as envConfig} from 'dotenv'
+import { config as envConfig } from 'dotenv';
 
-envConfig()
+envConfig();
 
 const _config = {
   port: process.env.PORT,
   databaseURl: process.env.MONGO_CONNECTION_URI,
-  
+  env: process.env.NODE_ENV,
 };
 
 export const config = Object.freeze(_config);
