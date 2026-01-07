@@ -3,7 +3,7 @@ import type { NextFunction, Request, Response } from 'express';
 import createHttpError from 'http-errors';
 import jwt from 'jsonwebtoken';
 import { config } from '../config/config.ts';
-import { UserModel, type User } from '../models/user.model.ts';
+import { UserModel, type UserType } from '../models/user.model.ts';
 
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
   const { name, email, password } = req.body;
@@ -26,7 +26,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
   const hashPass = await bcrypt.hash(password, 10);
 
   // create new user...
-  let newUser: User;
+  let newUser: UserType;
   try {
     newUser = await UserModel.create({
       name,
@@ -56,7 +56,7 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
     return next(allFieldError);
   }
 
-  let user: User | null;
+  let user: UserType | null;
   try {
     user = await UserModel.findOne({ email });
     if (!user) {
