@@ -5,10 +5,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import cloudinary from '../config/cloudinary.ts';
 import { BooksModel } from '../models/book.model.ts';
+import type { AuthRequest } from '../middlewares/authenticate.ts';
 
 const createBook = async (req: Request, res: Response, next: NextFunction) => {
   const { title, genre } = req.body;
-
+  
   const files = req.files as {
     [fieldname: string]: Express.Multer.File[] | undefined;
   };
@@ -54,10 +55,11 @@ const createBook = async (req: Request, res: Response, next: NextFunction) => {
     });
 
     // Create book in database
+    const _req = req as AuthRequest;
     const newBook = await BooksModel.create({
       title: title,
       genre: genre,
-      author: new Types.ObjectId(),
+      author: _req.userId,
       coverImage: uploadsImage.secure_url,
       file: uploadsFile.secure_url,
     });
@@ -90,4 +92,9 @@ const createBook = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { createBook };
+const getBooks = async (req: Request, res: Response, next: NextFunction) => {
+  const books = await BooksModel.find();
+  return res.status(200).json(books);
+};
+
+export { createBook, getBooks };
